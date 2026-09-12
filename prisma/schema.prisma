@@ -1,15 +1,16 @@
 // Life RPG — data model
-// Local dev uses SQLite (zero-config). For production, switch `provider` to
-// "postgresql" and point DATABASE_URL at your hosted Postgres (Neon/Supabase/etc).
-// See README for the exact steps.
+// Production uses PostgreSQL (Supabase). DATABASE_URL points at the transaction
+// pooler (port 6543, pgbouncer) for runtime queries; DIRECT_URL points at the
+// session pooler (port 5432) for schema pushes/migrations. See README.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
