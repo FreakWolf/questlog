@@ -1,0 +1,121 @@
+// Life RPG — data model
+// Local dev uses SQLite (zero-config). For production, switch `provider` to
+// "postgresql" and point DATABASE_URL at your hosted Postgres (Neon/Supabase/etc).
+// See README for the exact steps.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime  @default(now())
+
+  character    Character?
+  quests       Quest[]
+  inventory    InventoryItem[]
+  activityLogs ActivityLog[]
+}
+
+// The player's avatar / progression state.
+model Character {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  level     Int      @default(1)
+  xp        Int      @default(0)      // XP accumulated within the current level
+  totalXp   Int      @default(0)      // lifetime XP (for stats)
+  gold      Int      @default(0)
+
+  // Core attributes leveled by completing categorized quests
+  strength     Int   @default(1)
+  intellect    Int   @default(1)
+  discipline   Int   @default(1)
+  vitality     Int   @default(1)
+  charisma     Int   @default(1)
+
+  // Streak tracking
+  streak         Int       @default(0)
+  longestStreak  Int       @default(0)
+  lastActiveDate DateTime?
+
+  equippedTheme String  @default("dungeon")
+
+  updatedAt DateTime @updatedAt
+}
+
+// Quest categories map to attributes.
+// (kept as a string enum via check on the app layer for SQLite portability)
+model Quest {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  category    String    @default("discipline") // strength|intellect|discipline|vitality|charisma
+  difficulty  String    @default("normal")      // trivial|normal|hard|epic
+
+  xpReward    Int       @default(20)
+  goldReward  Int       @default(10)
+
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+// Catalog of purchasable items (shared across all users).
+model ShopItem {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  type        String   // theme|badge|consumable
+  cost        Int
+  icon        String   @default("✨")
+  payload     String?  // e.g. theme slug this item unlocks
+
+  inventory   InventoryItem[]
+}
+
+// Items a user owns.
+model InventoryItem {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopItemId String
+  shopItem   ShopItem @relation(fields: [shopItemId], references: [id], onDelete: Cascade)
+
+  acquiredAt DateTime @default(now())
+
+  @@unique([userId, shopItemId])
+  @@index([userId])
+}
+
+// Historical log — proves persistence + powers streak/analytics.
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      String   // quest_complete|level_up|purchase|streak
+  message   String
+  xpDelta   Int      @default(0)
+  goldDelta Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
