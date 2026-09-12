@@ -2,6 +2,8 @@
 
 > Turn your real life into an epic RPG. Complete real-world tasks as **quests**, earn **XP** and **gold**, **level up** your character's attributes, keep your **streak** alive, and spend gold in the **shop**.
 
+**🔗 Live demo:** https://questlog-m39ul347q-freakwolfs-projects.vercel.app
+
 Traditional to-do apps suffer from delayed gratification — the reward for reading a book or hitting the gym takes months to show up. **Life RPG** closes that gap with instant, game-like feedback loops: every completed task rains XP and gold, every level-up is a celebration, and all of it is saved to a secure backend so your progress follows you across devices.
 
 ---
