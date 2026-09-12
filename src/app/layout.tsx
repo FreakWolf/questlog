@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Press_Start_2P, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 const pixel = Press_Start_2P({
   weight: "400",
@@ -16,7 +17,7 @@ const body = Inter({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

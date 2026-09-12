@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const base = getSiteUrl();
   const now = new Date();
   return [
     { url: `${base}/`, lastModified: now, priority: 1 },
