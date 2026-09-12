@@ -1,0 +1,242 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #140d20;
+  --bg-2: #1e142f;
+  --panel: #241636;
+  --panel-border: #3a2a5c;
+  --text: #efe6ff;
+  --muted: #b3a3d4;
+  --accent: #b48cff;
+  --accent-2: #f5c542;
+  --glow: rgba(180, 140, 255, 0.5);
+}
+
+/* Theme: Emerald Grove */
+[data-theme="emerald"] {
+  --bg: #08160f;
+  --bg-2: #0e2318;
+  --panel: #12301f;
+  --panel-border: #1f5236;
+  --text: #e6fff0;
+  --muted: #8fd4ac;
+  --accent: #3ce88f;
+  --accent-2: #f5c542;
+  --glow: rgba(60, 232, 143, 0.45);
+}
+
+/* Theme: Neon Spire (cyberpunk) */
+[data-theme="cyber"] {
+  --bg: #08070f;
+  --bg-2: #0d0b1a;
+  --panel: #12102a;
+  --panel-border: #2a2470;
+  --text: #eafcff;
+  --muted: #7fb6d4;
+  --accent: #ff3df0;
+  --accent-2: #29e7ff;
+  --glow: rgba(255, 61, 240, 0.45);
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, var(--bg-2), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, var(--bg-2), transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+/* Subtle animated starfield / dungeon dust */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    1px 1px at var(--x, 50%) var(--y, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  background-size: 3px 3px;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.font-pixel {
+  font-family: var(--font-pixel), monospace;
+  letter-spacing: 0.02em;
+}
+
+/* Reusable panel — parchment-in-frame look */
+.panel {
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+}
+
+.panel-accent {
+  box-shadow: 0 0 0 1px var(--panel-border), 0 0 24px -8px var(--glow);
+}
+
+/* XP / progress bar */
+.xp-track {
+  background: color-mix(in srgb, var(--bg) 70%, black);
+  border: 1px solid var(--panel-border);
+  overflow: hidden;
+  position: relative;
+}
+.xp-fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+.xp-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 2.5s infinite;
+}
+
+/* Buttons */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-semibold transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  --tw-ring-color: var(--accent);
+  --tw-ring-offset-color: var(--bg);
+}
+.btn-primary {
+  background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 70%, black));
+  color: #0b0710;
+  box-shadow: 0 4px 0 0 color-mix(in srgb, var(--accent) 55%, black);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+.btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 color-mix(in srgb, var(--accent) 55%, black);
+}
+.btn-ghost {
+  background: color-mix(in srgb, var(--panel) 80%, transparent);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.input {
+  @apply w-full rounded-lg px-3 py-2 outline-none transition;
+  background: color-mix(in srgb, var(--bg) 70%, black);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+}
+.input::placeholder {
+  color: var(--muted);
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.muted {
+  color: var(--muted);
+}
+.accent {
+  color: var(--accent);
+}
+
+/* Skeleton loader */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--panel) 70%, black);
+  border-radius: 8px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 12%, transparent),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .xp-fill::after,
+  .skeleton::after {
+    display: none;
+  }
+}
+
+/* Focus visibility for keyboard users everywhere */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard/screen-reader users */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #0b0710;
+  font-weight: 700;
+}
+.skip-link:focus {
+  left: 8px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
